@@ -16,8 +16,9 @@ export const Character: FC<ICharacterProps> = ({
   index,
   keepOn,
 }) => {
-  const styleNeutral = { color: "gray" };
-  const styleActivated = { color: correct ? "white" : "red" };
+  const defaultStyle = { height: 0 };
+  const styleNeutral = { ...defaultStyle, color: "gray" };
+  const styleActivated = { ...defaultStyle, color: correct ? "white" : "red" };
   return (
     <p
       style={

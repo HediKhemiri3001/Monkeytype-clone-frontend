@@ -1,51 +1,41 @@
 import { FC, useEffect, useState } from "react";
 import { Character } from "../Character/Character";
+import { Position } from "../TextBox/TextBox";
 import SC from "../TextBox/TextBox.styles";
 interface IWordProps {
   word: string;
   index: number;
-  incorrectLetters: string[];
-  currentWord: number;
-  currentLetter: number;
+  incorrectLetters: Position[];
+  currentPosition: Position;
 }
-
 export const Word: FC<IWordProps> = ({
   word,
   index,
   incorrectLetters,
-  currentWord,
-  currentLetter,
+  currentPosition,
 }) => {
-  const [incorrectInWord, setIncorrectInWord] = useState<string[]>([]);
+  const [incorrectInWord, setIncorrectInWord] = useState<number[]>([]);
   const [activated, setActivated] = useState<boolean>(false);
   useEffect(() => {
-    setActivated(currentWord >= index);
-    const aux = incorrectLetters.filter(
-      (element) => element[0] === index.toString()
-    );
-    setIncorrectInWord(
-      aux.map((element) => {
-        const numbers = element.split(":");
-        return numbers[1];
-      })
-    );
-  }, [currentWord, incorrectLetters, index]);
-  const keepOn = currentWord > index;
+    setActivated(currentPosition.word >= index);
+    const aux = incorrectLetters.filter((element) => element.word === index);
+
+    setIncorrectInWord(aux.map((element) => element.letter));
+  }, [currentPosition, incorrectLetters, index]);
+  const keepOn = currentPosition.word > index;
   return (
-    <SC.WordsContainer tabIndex={-1}>
+    <SC.WordContainer tabIndex={-1}>
       {[...word].map((character, index) => (
         <Character
           key={word + index}
           index={index}
           wordActivated={activated}
-          currentLetter={currentLetter}
+          currentLetter={currentPosition.letter}
           keepOn={keepOn}
           character={character}
-          correct={
-            activated ? !incorrectInWord.includes(index.toString()) : null
-          }
+          correct={activated ? !incorrectInWord.includes(index) : null}
         ></Character>
       ))}
-    </SC.WordsContainer>
+    </SC.WordContainer>
   );
 };
