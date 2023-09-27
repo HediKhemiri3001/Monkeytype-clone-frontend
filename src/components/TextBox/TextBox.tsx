@@ -1,7 +1,13 @@
 import * as React from "react";
 import { FC } from "react";
 import { Space } from "../Space/Space";
+import { Stats } from "../Stats/Stats";
 import { Timer } from "../Timer/Timer";
+import {
+  Setting,
+  SettingsNames,
+  TypingSettings,
+} from "../TypingSettings/TypingSettings";
 import { Word } from "../Word/Word";
 import SC from "./TextBox.styles";
 export interface Position {
@@ -22,7 +28,14 @@ const ALLOWED_KEYS = [
   "ArrowLeft",
   "Tab",
 ];
+const DEFAULT_SETTINGS: Setting[] = [
+  { name: SettingsNames.duration, value: 30 },
+  { name: SettingsNames.words, value: 25 },
+];
 export const TextBox: FC<ITextBoxProps> = () => {
+  const [settings, setSettings] = React.useState<Setting[]>(DEFAULT_SETTINGS);
+  const [lastActiveWord, setLastActiveWord] = React.useState<number>(0);
+  const [showStats, setShowStats] = React.useState<boolean>(false);
   const [words, setWords] = React.useState<string[]>([]);
   const [timerStart, setTimerStart] = React.useState(false);
   const [currentPosition, setCurrentPosition] = React.useState<Position>({
@@ -33,23 +46,27 @@ export const TextBox: FC<ITextBoxProps> = () => {
     []
   );
   const processResult = (text: string) => {
-    const seperatedWords = text.split(" ");
-    setWords(seperatedWords);
+    // Problem there is a character that cant be passed which is the start of the second paragraph.
+    const seperationRegExp = RegExp(" |\\n");
+    const seperatedWords = text.split(seperationRegExp);
+    setWords(words.concat(seperatedWords));
   };
   const fetchText = () => {
-    fetch("http://metaphorpsum.com/paragraphs/1")
+    fetch("http://metaphorpsum.com/paragraphs/2")
       .then((response) => response.text())
       .then((result) => processResult(result));
   };
   React.useEffect(() => {
     fetchText();
   }, []);
+  React.useEffect(() => {
+    if (currentPosition.word === (words.length - 1) / 2) fetchText();
+  }, [currentPosition, words.length]);
   const handleKeyDown = (event: { key: string }) => {
     if (timerStart === false) {
       setTimerStart(true);
     }
     const pressedKey = event.key;
-    console.log(pressedKey);
 
     if (ALLOWED_KEYS.includes(pressedKey)) return;
     if (pressedKey === "Backspace") {
@@ -119,10 +136,38 @@ export const TextBox: FC<ITextBoxProps> = () => {
       }
     }
   };
-  console.log(incorrectLetters);
+  const onTimerEnd = () => {
+    setLastActiveWord(currentPosition.word);
+    setShowStats(true);
+  };
+  const changeSetting = (setting: Setting) => {
+    const settingsAux = settings.filter(
+      (element) => element.name !== setting.name
+    );
+    setSettings([...settingsAux, setting]);
+  };
   return (
     <>
-      <Timer duration={60} start={timerStart} />
+      <TypingSettings updateSettings={changeSetting} />
+      {showStats && (
+        <Stats
+          incorrectLetters={incorrectLetters}
+          words={words}
+          lastActiveWord={lastActiveWord}
+          settings={settings}
+        ></Stats>
+      )}
+      {settings && (
+        <Timer
+          duration={
+            settings.find((setting) => setting.name === SettingsNames.duration)!
+              .value
+          }
+          start={timerStart}
+          onTimerEnd={onTimerEnd}
+        />
+      )}
+
       <SC.Container tabIndex={-1} onKeyDown={handleKeyDown}>
         {words?.map((word, index) => (
           <>
