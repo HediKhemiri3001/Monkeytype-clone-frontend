@@ -1,3 +1,4 @@
+import { Stack } from "@mui/material";
 import * as React from "react";
 import { FC } from "react";
 import { Space } from "../Space/Space";
@@ -147,7 +148,7 @@ export const TextBox: FC<ITextBoxProps> = () => {
     setSettings([...settingsAux, setting]);
   };
   return (
-    <>
+    <Stack height={1} alignItems="center">
       <TypingSettings updateSettings={changeSetting} />
       {showStats && (
         <Stats
@@ -185,6 +186,6 @@ export const TextBox: FC<ITextBoxProps> = () => {
           </>
         ))}
       </SC.Container>
-    </>
+    </Stack>
   );
 };

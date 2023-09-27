@@ -1,6 +1,8 @@
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, Typography } from "@mui/material";
 import { ChangeEvent, FC, useState } from "react";
+import { Colors } from "../../assets/constants";
 import { LoginUser, loginUser } from "../../services/User";
+import { Form } from "./Login.styles";
 
 export const Login: FC = () => {
   const [form, setForm] = useState<LoginUser>({ username: "", password: "" });
@@ -25,9 +27,11 @@ export const Login: FC = () => {
     loginUser(form);
   };
   return (
-    <form>
+    <Form>
+      <Typography variant="h2" color={Colors.text} fontFamily={"Robo"}>
+        Login
+      </Typography>
       <TextField
-        sx={{ color: "white" }}
         id="username"
         label="Username"
         type="text"
@@ -41,10 +45,16 @@ export const Login: FC = () => {
         type="password"
         value={form.password}
         onChange={onFormChange}
+        variant={"filled"}
       ></TextField>
-      <Button onClick={onSubmit} disabled={disabledForm}>
+      <Button
+        onClick={onSubmit}
+        disabled={disabledForm}
+        variant={"outlined"}
+        color={"primary"}
+      >
         Submit
       </Button>
-    </form>
+    </Form>
   );
 };
