@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import { Modal, Stack } from "@mui/material";
 import * as React from "react";
 import { FC } from "react";
 import { Space } from "../Space/Space";
@@ -138,6 +138,7 @@ export const TextBox: FC<ITextBoxProps> = () => {
     }
   };
   const onTimerEnd = () => {
+    setTimerStart(false);
     setLastActiveWord(currentPosition.word);
     setShowStats(true);
   };
@@ -147,17 +148,31 @@ export const TextBox: FC<ITextBoxProps> = () => {
     );
     setSettings([...settingsAux, setting]);
   };
+  const closeStatsModal = () => {
+    setShowStats(false);
+  };
   return (
     <Stack height={1} alignItems="center">
       <TypingSettings updateSettings={changeSetting} />
-      {showStats && (
+      <Modal
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+        open={showStats}
+        onClose={() => closeStatsModal()}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
         <Stats
           incorrectLetters={incorrectLetters}
           words={words}
           lastActiveWord={lastActiveWord}
           settings={settings}
         ></Stats>
-      )}
+      </Modal>
+
       {settings && (
         <Timer
           duration={

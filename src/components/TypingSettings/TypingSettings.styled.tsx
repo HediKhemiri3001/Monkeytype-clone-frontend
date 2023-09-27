@@ -6,8 +6,8 @@ interface ISettingButton {
 export const SettingButton = styled("button")<ISettingButton>(
   ({ selected }) => ({
     textDecoration: "none",
-    color: selected ? Colors.text_yellow : Colors.text,
-    backgroundColor: "#393646",
+    color: selected ? Colors.text_yellow : Colors.sub,
+    backgroundColor: Colors.darker_background,
     border: 0,
     ":hover": {
       color: "#F4EEE0",
@@ -17,7 +17,7 @@ export const SettingButton = styled("button")<ISettingButton>(
 );
 export const SettingsBar = styled(Stack)(() => ({
   flexDirection: "row",
-  backgroundColor: "#393646",
+  backgroundColor: Colors.darker_background,
   borderRadius: "1em",
   padding: "0.2em",
   width: "fit-content",

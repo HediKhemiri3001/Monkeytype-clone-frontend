@@ -1,3 +1,4 @@
+import { Object } from "parse";
 import { useUser } from "../contexts/userContext";
 
 export interface User {

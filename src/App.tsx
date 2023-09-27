@@ -19,7 +19,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Stack flexDirection={"column"} height={1} gap={20}>
+      <Stack flexDirection={"column"} height={1} gap={20} paddingX={"10em"}>
         <NavBar />
         <TextBox></TextBox>
       </Stack>

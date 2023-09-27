@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 interface ITimerProps {
   duration: number;
   start: boolean;
@@ -6,22 +6,28 @@ interface ITimerProps {
 }
 
 export const Timer: FC<ITimerProps> = ({ duration, start, onTimerEnd }) => {
-  const [seconds, setSeconds] = useState(duration); // Initial countdown time in seconds
+  const [seconds, setSeconds] = useState(duration);
+  // Initial countdown time in seconds
   useEffect(() => {
     setSeconds(duration);
   }, [duration]);
-
+  const timerEnded = useCallback(() => {
+    onTimerEnd();
+  }, [onTimerEnd]);
   useEffect(() => {
     if (start) {
-      let counter;
+      let counter: NodeJS.Timeout;
       if (seconds > 0) {
         counter = setTimeout(() => setSeconds(seconds - 1), 1000);
       } else {
-        onTimerEnd();
-        clearTimeout(counter);
+        timerEnded();
+        return () => {
+          clearTimeout(counter);
+        };
       }
     }
-  }, [onTimerEnd, seconds, start]);
+  }, [seconds, start]);
+
   const formatTime = (inSeconds: number): string => {
     return `${Math.floor(inSeconds / 60)
       .toString()

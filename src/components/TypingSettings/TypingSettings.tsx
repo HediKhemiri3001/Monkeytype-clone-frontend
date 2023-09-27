@@ -1,5 +1,6 @@
 import { Divider, Stack } from "@mui/material";
 import { FC, useState } from "react";
+import { Colors } from "../../assets/constants";
 import { SettingButton, SettingsBar } from "./TypingSettings.styled";
 interface ITypingSettingsProps {
   updateSettings: (setting: Setting) => void;
@@ -49,7 +50,12 @@ export const TypingSettings: FC<ITypingSettingsProps> = ({
       </Stack>
       <Divider
         orientation="vertical"
-        sx={{ height: "2em", backgroundColor: "#FFF" }}
+        sx={{
+          height: "2.3em",
+          backgroundColor: Colors.background,
+          width: "0.35em",
+          borderRadius: "1em",
+        }}
         variant={"middle"}
       />
       <Stack direction={"row"}>
