@@ -1,5 +1,5 @@
-import { Object } from "parse";
 import { useUser } from "../contexts/userContext";
+import { readObject } from "../helpers/localStorage";
 
 export interface User {
   objectId: string;
@@ -18,6 +18,10 @@ const headers: Headers = new Headers([
   ["X-Parse-Application-Id", import.meta.env.VITE_PARSE_APPLICATION_ID],
   ["Content-Type", "application/json"],
 ]);
+export const isUserLoggedIn = (): boolean => {
+  const user = readObject("user");
+  return !!user;
+};
 
 export const createUser = async (user: CreateUser) => {
   const body: BodyInit = JSON.stringify(user);
