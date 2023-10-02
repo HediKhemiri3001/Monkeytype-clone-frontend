@@ -8,6 +8,7 @@ export const removeObject = (key: string) => {
   localStorage.removeItem(key);
 };
 
-export const readObject = (key: string): object | User => {
-  return JSON.parse(localStorage.getItem(key)!);
+export const readObject = (key: string): User => {
+  const fetched: User = JSON.parse(localStorage.getItem(key)!);
+  return fetched;
 };

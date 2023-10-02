@@ -1,3 +1,4 @@
+import * as React from "react";
 import { createContext, useContext, useState } from "react";
 import { User } from "../services/User";
 
@@ -18,8 +19,10 @@ export const useUser = () => {
   }
   return context;
 };
-
-export const UserProvider: React.FC = ({ children }) => {
+type UserProviderProps = {
+  children?: React.ReactNode;
+};
+export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
 
   return (
